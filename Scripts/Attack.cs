@@ -14,6 +14,7 @@ public class Attack : MonoBehaviour
     public float RechargeTime = 5f;
     public int AreaEffectDist = 2;
     RaycastHit hit;
+    RaycastHit[] hits;
     Renderer hitRenderer;
 
     // Start is called before the first frame update
@@ -145,12 +146,14 @@ public class Attack : MonoBehaviour
                 Collider cast = tile.GetComponent<Collider>();
                 //this part kills the enemies
                 if (cast != null){
-                    if (Physics.BoxCast(cast.bounds.center, transform.localScale*2f, transform.up, out hit, transform.rotation, Mathf.Infinity)){
-                        
-                        Debug.Log(hit);
-                        if (hit.transform != null){
-                            if (hit.transform.gameObject.tag == "turtle" || hit.transform.gameObject.tag == "slime"){
-                                hit.transform.gameObject.SetActive(false);
+                    hits = Physics.BoxCastAll(cast.bounds.center, transform.localScale, transform.up, transform.rotation, Mathf.Infinity);
+                    if (hits != null){
+                        foreach (RaycastHit hit in hits){
+                            Debug.Log(hit);
+                            if (hit.transform != null){
+                                if (hit.transform.gameObject.tag == "turtle" || hit.transform.gameObject.tag == "slime"){
+                                    hit.transform.gameObject.SetActive(false);
+                                }
                             }
                         }
                     }
